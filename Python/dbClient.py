@@ -4,11 +4,12 @@
 ##database server software
 ##
 
+
 import pickle
 import sys
 
-PIPE_IN_NAME = '\\.\pipe\DB_Query_in'
-PIPE_OUT_PREFIX = '\\.\pipe\DB_Query_out'
+PIPE_IN_NAME = 'servin.txt'
+PIPE_OUT_PREFIX = 'servout'
 pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization    
 
 
@@ -25,10 +26,10 @@ class db_Connect:
         self.iden = iden
 
     #Prefixes the command with an identifier for the output pipe
-    def send(command):
+    def send(self, command):
         #open pipe
         try:
-            f = open(PIPE_IN_NAME, w)
+            f = open(PIPE_IN_NAME, 'w')
             f.write(str(iden) + str(command))
             f.flush()
             f.close()
@@ -36,8 +37,8 @@ class db_Connect:
             ()
          
         
-    def read():
-        g.open(PIPE_OUT_PREFIX + str(iden), r)
+    def read(self):
+        g = open(PIPE_OUT_PREFIX + str(self.iden), 'r')
         #unpickle
         dePickler = pickle.Unpickler(g);
         try:
@@ -46,10 +47,10 @@ class db_Connect:
             output = None
 
     #gets events with a specific time stamp
-    def get_time_events(time):
+    def get_time_events(self, time):
         query = "SELECT * FROM Interest WHERE time = " + time + ";"
-        send(query)
-        result = read()
+        self.send(query)
+        result = self.read()
         return result
 
 ##   Not user about the best query to use here 
@@ -58,23 +59,23 @@ class db_Connect:
 ##        send(query)
 ##        result = read()
 ##        return result
-    def get_all_events():
+    def get_all_events(self):
         query = "SELECT * FROM Interest;"
-        send(query)
-        result = read()
+        self.send(query)
+        result = self.read()
         return result
-    def lookup_student(mac_addr):
+    def lookup_student(self, mac_addr):
         query = "SELECT * FROM devices where mac = " + str(mac_addr) + ";"
-        send(query)
-        result = read()
+        self.send(query)
+        result = self.read()
         return result[0]
     
     #Pass variables as sendEvents([index, rating, time, student])
-    def sendEvents(entry):                   
+    def sendEvents(self, entry):                   
         query = "INSERT INTO Interest VALUES ("
         query = query + enterid + ',' + entry[0] + ',' + entry[1] + ',' + entry[2] + ")"
-        send(query)
-    def addDevice(mac, ip, student)
+        self.send(query)
+    def addDevice(self, mac, ip, student):
         #addDevice should also result in an echo being sent to output pipe 0
         query = "INSERT INTO devices VALUES (" + mac + "," + ip + "," + student + ");"
         

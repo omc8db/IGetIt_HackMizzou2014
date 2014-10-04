@@ -19,8 +19,9 @@ class devicePoll:
     def __init__(self):
         self.conn = dbClient.db_Connect(PIPE_ID)
         #get unique primary key
-        all_events = conn.get_all_events()
-        primekey = all_events[len(all_events)][0]   #fetches the last event
+        all_events = self.conn.get_all_events()
+        if(all_events):
+            primekey = all_events[len(all_events)][0]   #fetches the last event
     def infpoll(self):
         while (1):
             self.poll()
@@ -30,10 +31,10 @@ class devicePoll:
             time.sleep(POLL_DELAY)
     def poll(self):
         curr_time = time.time()
-        for device in devices:
+        for device in self.devices:
             val = talk(device)
             self.conn.sendEvents([primekey, val, curr_time, device.owner])
-            primekey++
+            primekey = primekey + 1
     def talk(device):
         #make http request to device
         f = url.urlopen(device.ip)
@@ -44,11 +45,11 @@ class device:
     ip = None
     mac = None
     owner = None
-    def __init__(self, ip, mac, owner)
+    def __init__(self, ip, mac, owner):
         self.ip = ip
         self.mac = mac
         self.owner = owner
-    def __init__(self, db_entry)
+    def __init__(self, db_entry):
         self.mac = db_entry[0]
         self.ip = db_entry[1]
         self.owner = db_entry[2]

@@ -4,17 +4,21 @@
 ##
 ##
 
+
 import pickle
 import sqlite3 as lite
 import os
-PIPE_IN_NAME = '\\.\pipe\DB_Query_in'
-PIPE_OUT_PREFIX = '\\.\pipe\DB_Query_out'
+import time
+PIPE_IN_NAME = 'servin.txt'
+PIPE_OUT_PREFIX = 'servout'
 DB_NAME = "data.db"
+POLL_DELAY = 2
 
 pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization
 
 ##Open pipes
 def initPipes():
+    ()
     #os.popen
 
 class db_Serv:
@@ -22,9 +26,9 @@ class db_Serv:
     f = None
     db_name = None
     def __init__(self, dbname):
-        f.open(PIPE_IN_NAME, r)
+        f = open(PIPE_IN_NAME, 'r')
         db_name = dbname
-    def poll():
+    def poll(self):
         try:                 #Query found
             query = f.read()
             #remove prefix from query
@@ -39,8 +43,9 @@ class db_Serv:
     def infpoll(self):
         while(1):
             self.poll();
+            time.sleep(POLL_DELAY)
         
-    def exec_input(query):
+    def exec_input(self, query):
         self.con = lite.connect(dbname)
         self.cur = self.con.cursor()
         self.cur.execute(query)
