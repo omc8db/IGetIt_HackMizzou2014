@@ -23,24 +23,29 @@
 	}
 	.graphbin
 	{
-		width: 50%;
-		background-color: black;
+		width: 10%;
+		//background-color: black;
 	}
 	.graphbar
 	{
 		width: 100%;
 		background-color: black;
+		vertical-align: text-bottom;
 	}
 	</style>
 	<script type="text/javascript">
+	alert("first script tag runs");
+	
 	//A dummy set of frequencies for each range ex: 0-1, 1-2, etc...
-	var frequencies = {0,0,0,0,3,5,10,19,9,2};
+	
+	var frequencies = [0,0,0,0,3,5,10,19,9,2];
 	
 	//The number of ranges/bins/bars being graphed
 	var resolution = 10;
 	
 	//The total number of students
 	var numStudents = 38;
+	
 	
 	function drawGraph(resolution, frequencies, numStudents)
 	{
@@ -60,28 +65,30 @@
 			currentBin.setAttribute("id",i);
 			
 			//calculate the height for the current bar (should be done server-side eventually)
-			var currentHeightPercent = (frequencies[i]/numstudents)*100;
-			
+			var currentHeightPercent = (frequencies[i]/numStudents)*100;
+
 			//set up a bar element
 			var currentBar = document.createElement("div");
 			currentBar.setAttribute("class", "graphbar");
 			currentBar.style.height = currentHeightPercent+"%";
 			
 			//append the current bar to the current bin
-			currentBin.appendChild(bar);
-			
+			currentBin.appendChild(currentBar);
+			alert(frequencies[i]);
 			//append the current bin (td) to the table row
 			rowOfBars.appendChild(currentBin);
+			alert(rowOfBars.childNodes[0]);
 		}
-		document.getElementById("graphbox").appendChild(rowOfBars);
+		var graphBox = document.getElementById("graphbox")
+		graphBox.replaceChild(rowOfBars, graphBox.childNodes[1]);
 	}
+	
 	</script>
 </head>
 <body>
 	<div id="graph">
-		<h2 class="graphtitle">Students by Understanding Index</h2>
-		<!div id="graphbox">
-			<table onload="drawGraph(resolution,frequencies,numStudents);" id="graphbox">
+		<h2 class="graphtitle">Students for Each Understanding Index</h2>
+			<table id="graphbox">
 			<tr>
 				<td id="1" class="graphbin">
 				<td id="2" class="graphbin">
@@ -95,7 +102,10 @@
 				<td id="10" class="graphbin">
 			</tr>
 			</table>
-		<!/div>
+			<script type="text/javascript">
+			//alert('second script tag runs');
+			drawGraph(resolution, frequencies, numStudents);
+			</script>
 	</div>
 </body>
 </html>
