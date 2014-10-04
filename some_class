@@ -1,0 +1,39 @@
+IP_CONST = '192.168.137.112'
+
+class database:
+    def update(aggregate[]):
+        #get data
+
+
+class student:
+    ID
+    device thing
+    rating
+    all_ratings[]
+    def getrating():
+        f = url.urlopen(ip_lol)
+        rating = f.read()
+        all_ratings.append(rating)
+
+class device:
+    ip_addr
+    mac_addr
+    
+
+def setup_students():
+    dev_list[] #array of twoples
+    student student_list[]
+    ip_list.append(get_ip_list())
+    for ip in ip_list:
+        student_list[ip].ip_lol = ip_list[ip]
+    return student_list
+    
+def get_ip_list():
+    a_list[]
+    a_list.append(IP_CONST)
+    return a_list
+
+def dev_connect():
+    device thingy
+    thingy.ip_addr = IP_CONST
+    thingy.mac_addr = 
