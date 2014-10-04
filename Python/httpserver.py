@@ -25,7 +25,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             allofpath = s.path.split('?')
             variablestogether = allofpath[1]
             variablesseparate = variablestogether.split('&')
-            if len(variabesseparate) > 1:
+            if len(variablesseparate) > 1:
                 var1 = variablesseparate[0].split('=')
                 if var1[0] == 'ipaddr' and len(var1) == 2:
                     ipaddr = var1[1] 
