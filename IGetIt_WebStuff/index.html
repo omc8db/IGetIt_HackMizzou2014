@@ -1,18 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Test Visualization</title>
 	<style>
+	body
+	{
+	font-family: sans-serif;
+	}
+	.graphtitle
+	{
+		text-align:center;
+	}
 	#graph
+	{
+		width:640px;
+	}
+	#graphbox
 	{
 		width:640px;
 		height:480px;
 		border:1px solid;
 	}
+	.graphbin
+	{
+		width=50%;
+		background-color:black;
+	}
 	</style>
-	<title>Test Visualization</title>
+	<script type="text/javascript">
+	var frequencies = {0,0,0,0,3,5,10,19,9,2};
+	</script>
 </head>
 <body>
 	<div id="graph">
+		<h2 class="graphtitle">Students by Understanding Index</h2>
+		<!div id="graphbox">
+			<table id="graphbox">
+			<tr>
+				<td id="1" class="graphbin">
+				<td id="2" class="graphbin">
+				<td id="3" class="graphbin">
+				<td id="4" class="graphbin">
+				<td id="5" class="graphbin">
+				<td id="6" class="graphbin">
+				<td id="7" class="graphbin">
+				<td id="8" class="graphbin">
+				<td id="9" class="graphbin">
+				<td id="10" class="graphbin">
+			</tr>
+			</table>
+		<!/div>
 	</div>
 </body>
 </html>
