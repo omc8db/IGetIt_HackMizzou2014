@@ -27,6 +27,7 @@ class devicePoll:
             x = self.conn.read()
             if x:
                 devices.append(x)
+            time.sleep(POLL_DELAY)
     def poll(self):
         curr_time = time.time()
         for device in devices:

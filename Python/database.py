@@ -1,3 +1,8 @@
+##
+##
+##This file is DEPRECIATED. It is kept around for reference, and is
+##candidate for DELETION
+##
 
 class database:
     enterid = 0
