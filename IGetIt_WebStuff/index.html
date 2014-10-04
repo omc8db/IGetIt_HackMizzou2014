@@ -9,33 +9,79 @@
 	}
 	.graphtitle
 	{
-		text-align:center;
+		text-align: center;
 	}
 	#graph
 	{
-		width:640px;
+		width: 640px;
 	}
 	#graphbox
 	{
-		width:640px;
-		height:480px;
-		border:1px solid;
+		width: 640px;
+		height: 480px;
+		border: 1px solid;
 	}
 	.graphbin
 	{
-		width=50%;
-		background-color:black;
+		width: 50%;
+		background-color: black;
+	}
+	.graphbar
+	{
+		width: 100%;
+		background-color: black;
 	}
 	</style>
 	<script type="text/javascript">
+	//A dummy set of frequencies for each range ex: 0-1, 1-2, etc...
 	var frequencies = {0,0,0,0,3,5,10,19,9,2};
+	
+	//The number of ranges/bins/bars being graphed
+	var resolution = 10;
+	
+	//The total number of students
+	var numStudents = 38;
+	
+	function drawGraph(resolution, frequencies, numStudents)
+	{
+		alert("drawGraph("+resolution+","+frequencies+","+numStudents+")");
+		
+		//Calculate the width percentage needed to equally divide the table into bars
+		var widthPercent = 100/resolution;
+		
+		//Create table row to put bars in
+		var rowOfBars = document.createElement("tr");
+		
+		for (var i = 0; i < resolution; i++)
+		{
+			//set up a table data or "bin" element for each bar
+			var currentBin = document.createElement("td");
+			currentBin.setAttribute("class","graphbin");
+			currentBin.setAttribute("id",i);
+			
+			//calculate the height for the current bar (should be done server-side eventually)
+			var currentHeightPercent = (frequencies[i]/numstudents)*100;
+			
+			//set up a bar element
+			var currentBar = document.createElement("div");
+			currentBar.setAttribute("class", "graphbar");
+			currentBar.style.height = currentHeightPercent+"%";
+			
+			//append the current bar to the current bin
+			currentBin.appendChild(bar);
+			
+			//append the current bin (td) to the table row
+			rowOfBars.appendChild(currentBin);
+		}
+		document.getElementById("graphbox").appendChild(rowOfBars);
+	}
 	</script>
 </head>
 <body>
 	<div id="graph">
 		<h2 class="graphtitle">Students by Understanding Index</h2>
 		<!div id="graphbox">
-			<table id="graphbox">
+			<table onload="drawGraph(resolution,frequencies,numStudents);" id="graphbox">
 			<tr>
 				<td id="1" class="graphbin">
 				<td id="2" class="graphbin">
