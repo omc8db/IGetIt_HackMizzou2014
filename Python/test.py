@@ -9,7 +9,7 @@
 
 import some_class.py
 
-database = db(DB_NAME)
+db = database(DB_NAME)
 students = setup_students()
 
 aggregate = [0,0,0,0] #[[[rating, time] [rating, time]][rating, time]
