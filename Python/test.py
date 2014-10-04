@@ -7,7 +7,8 @@
 #
 ######################################################
 
-import some_class.py
+from some_class import *
+from database import *
 
 db = database(DB_NAME)
 students = setup_students()
@@ -32,4 +33,4 @@ while(1):
         time.sleep(POLL_FREQ)
     db.update(aggregate)
     aggregate = [0,0,0,0]
-]
+
