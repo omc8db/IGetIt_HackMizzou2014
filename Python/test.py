@@ -9,12 +9,10 @@
 
 import some_class.py
 
-database db(DB_NAME)
-setup_students()
+database = db(DB_NAME)
+students = setup_students()
 
-student[]
-present[]
-aggregate[] #[[[rating, time] [rating, time]][rating, time]
+aggregate = [0,0,0,0] #[[[rating, time] [rating, time]][rating, time]
 samples = 0
 DB_UPDATE_PERIOD = 200 #number of cycles of data to collect before
                        #storing in the database
@@ -33,4 +31,5 @@ while(1):
             aggregate[stud].append([students[stud].rating, pres_time, students[stud].ID])
         time.sleep(POLL_FREQ)
     db.update(aggregate)
+    aggregate = [0,0,0,0]
 ]
