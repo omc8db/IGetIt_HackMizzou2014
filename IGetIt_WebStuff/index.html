@@ -24,17 +24,19 @@
 	.graphbin
 	{
 		width: 10%;
+		height: 100%
 		//background-color: black;
+		border: 5px solid;
 	}
 	.graphbar
 	{
 		width: 100%;
-		background-color: black;
-		vertical-align: text-bottom;
+		background-color: blue;
+		vertical-align: 500px;
 	}
 	</style>
 	<script type="text/javascript">
-	alert("first script tag runs");
+	//alert("first script tag runs");
 	
 	//A dummy set of frequencies for each range ex: 0-1, 1-2, etc...
 	
@@ -46,6 +48,44 @@
 	//The total number of students
 	var numStudents = 38;
 	
+	//Uses AJAX to load values from the server
+	function loadData()
+	{
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	xmlhttp.onreadystatechange=function()
+	  {
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+		var responseData = JSON.parse(responseText);
+		
+		//If the response data contains the desired variables, store their values to the local equivalents
+		if (typeof responseData.resolution == "number") {
+			resolution = responseData.resolution;
+		}
+		
+		if (typeof responseData.frequencies == "object") {
+			resolution = responseData.frequencies;
+		}
+		
+		if (typeof responseData.numStudents == "number") {
+			resolution = responseData.numStudents;
+		}
+
+		
+		
+		}
+	  }
+	xmlhttp.open("GET","ajax_info.txt",true);
+	xmlhttp.send();
+	}
 	
 	function drawGraph(resolution, frequencies, numStudents)
 	{
