@@ -87,19 +87,11 @@
 		
 		}
 	  }
-	xmlhttp.open("GET","http://google.com",true);
+	xmlhttp.open("GET","histogramdata",true);
 	xmlhttp.send();
 	
 	alert("loadData finished");
 	}
-	
-	
-		alert("drawGraph("+resolution+","+frequencies+","+numStudents+")");
-		
-		loadData();
-		
-		alert("drawGraph("+resolution+","+frequencies+","+numStudents+")");
-	
 	
 	function drawGraph(resolution, frequencies, numStudents)
 	{
@@ -156,10 +148,19 @@
 				<td id="10" class="graphbin">
 			</tr>
 			</table>
-			<script type="text/javascript">
-			//alert('second script tag runs');
-			drawGraph(resolution, frequencies, numStudents);
-			</script>
 	</div>
+	<script type="text/javascript">
+			//alert('second script tag runs');
+			
+			
+			alert(frequencies);
+		
+			loadData();
+		
+			alert(frequencies);
+	
+			drawGraph(resolution, frequencies, numStudents);
+	
+	</script>
 </body>
 </html>
