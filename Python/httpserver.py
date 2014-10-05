@@ -1,12 +1,12 @@
 import BaseHTTPServer
-import db_Connect
+import dbClient
 
 server_host = 'localhost'
 server_port = 80
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self):
-        self.db = dbClient(1)
+        self.db = dbClient.db_Connect(1)
         super(RequestHandler,self).__init__();
 
     def do_HEAD(self,s):
