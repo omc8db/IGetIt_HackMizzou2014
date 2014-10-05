@@ -45,28 +45,28 @@ class db_Serv:
         self.inputfile = open(PIPE_IN_NAME, 'r')
 
         ##Connect to Database
-        self.dbcon = lite.connect(db_name)
-        self.cur = self.con.cursor()
+        self.dbcon = lite.connect(dbname)
+        self.cur = self.dbcon.cursor()
         
     def __del__(self):
-        inputfile.close()
-        dbcon.close()
+        self.inputfile.close()
+        self.dbcon.close()
         
     def poll(self):
-        try:                 #Query found
-            queries = []
-            queries.append(self.inputfile.read())
+        queries = []
+        queries.append(self.inputfile.read())
+        if(len(queries) > 1):
+            print len(queries)
             queries[0].split(';')
             for query in queries:
             #remove prefix from query
                 prefix = query[0]
                 result = exec_input(query[1:])
+                print "Executing " + query[1:]
                 g.open(PIPE_OUT_PREFIX + str(prefix), "a")
                 packer = pickle.Pickler(g, HIGHEST_PROTOCOL)
                 packer.dump(result)
                 g.close()
-        except:              #No query found
-            print "WARNING: COULD NOT RETURN QUERY RESULTS"
     def infpoll(self):
         while(1):
             self.poll();

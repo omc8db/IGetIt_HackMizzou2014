@@ -37,14 +37,14 @@ class db_Connect:
         #open pipe
         success = 0
         while(success==0):
-            try:
-                outputfile = open(PIPE_IN_NAME, 'a')
-                outputfile.write(str(iden) + str(command))
-                outputfile.flush()
-                outputfile.close()
-                success = 1
-            except:
-                outputfile.close()
+##        try:
+            outputfile = open(PIPE_IN_NAME, 'a')
+            outputfile.write(str(self.iden) + str(command))
+            outputfile.flush()
+            outputfile.close()
+            success = 1
+##        except:
+##            outputfile.close()
          
         
     def read(self):
@@ -88,6 +88,11 @@ class db_Connect:
     def addDevice(self, mac, ip, student):
         #addDevice should also result in an echo being sent to output pipe 0
         query = "INSERT INTO devices VALUES (" + mac + "," + ip + "," + student + ");"
+        self.send(query)
+        query = "SELECT * FROM devices WHERE mac = " + mac + ");"
+        self.send(query)
+        result = self.read()
+        return result
         
         #query to add device
         #query to select * from devices where mac = mac
