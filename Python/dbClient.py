@@ -107,6 +107,11 @@ class db_Connect:
         self.send(query)
         result = self.read()
         return result
+    def get_all_devices(self):
+        query = "SELECT * FROM devices;"
+        self.send(query)
+        result = self.read()
+        return result
     def lookup_student(self, mac_addr):
         query = "SELECT * FROM devices where mac = " + str(mac_addr) + ";"
         self.send(query)
