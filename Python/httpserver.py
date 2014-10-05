@@ -41,10 +41,38 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.db.addDevice(macaddr,ipaddr,studname)
             s.wfile.write("ipaddr="+ipaddr+",macaddr="+macaddr)
                     
-        if s.path[:14] == '/histogramdata':
-                s.wfile.write("{ \"resolution\":10,")
-                s.wfile.write("\"frequencies\":[0,0,0,0,3,5,5,15,9,1],")
-                s.wfile.write("\"numStudents\": 38 }")
+        if s.path[:14] == "/histogramdata":
+
+                #get list of latest ratings
+                maxtime = self.db.get_max_time()
+                studentratings = self.db.get_time_ratings(maxtime)
+                ratingslist = studentratings.split("\n")[1:]
+                numstudents = len(ratingslist)
+
+                #set number of bars on graph
+                resolution = 10
+
+                frequencylist = []
+
+                #tally up frequency
+                increment = numstudents/resolution
+
+                for currentrating in ratingslist:
+                    lownum = 0
+                    i = 0;
+                    while i < resolution:
+                        highnum = lownum + increment
+                        if currentrating <= highnum and currentrating > lownum:
+                            frequencylist[i] += 1
+                        i += 1
+                        lownum = highnum
+
+
+
+                s.wfile.write("{ \"resolution\":"+resolution+",")
+                s.wfile.write("\"frequencies\":"+frequencylist+",")
+                s.wfile.write("\"numStudents\":"+numstudents+" }")
+
             
         if s.path == '/' or s.path == '':
                 #s.wfile.write("the index.html should be printed out now")

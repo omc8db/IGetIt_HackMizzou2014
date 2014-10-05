@@ -47,8 +47,15 @@ class db_Connect:
             output = None
 
     #gets events with a specific time stamp
-    def get_time_events(self, time):
-        query = "SELECT * FROM Interest WHERE time = " + time + ";"
+    def get_time_ratings(self, time):
+        query = "SELECT rating FROM Interest WHERE time = " + time + ";"
+        self.send(query)
+        result = self.read()
+        return result
+
+    #get maximum time
+    def get_max_time(self):
+        query = "SELECT MAX(time) FROM Interest;"
         self.send(query)
         result = self.read()
         return result
