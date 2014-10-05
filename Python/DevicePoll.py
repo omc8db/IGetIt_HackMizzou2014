@@ -7,7 +7,7 @@
 import sys
 import time
 import urllib2 as url
-import dbClient
+import db_Connect
 PIPE_ID = 0
 POLL_DELAY = 5   #Seconds to delay while polling
 
@@ -17,7 +17,7 @@ class devicePoll:
     inpipe = None
     primekey = 0
     def __init__(self):
-        self.conn = dbClient.db_Connect(PIPE_ID)
+        self.conn = db_Connect.db_Connect(PIPE_ID)
         #get unique primary key
         all_events = self.conn.get_all_events()
         if(all_events):
