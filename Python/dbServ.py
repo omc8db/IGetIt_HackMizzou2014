@@ -13,6 +13,7 @@ PIPE_IN_NAME = 'servin.txt'
 PIPE_OUT_PREFIX = 'servout'
 DB_NAME = "data.db"
 POLL_DELAY = 2
+MAX_PREFIX = 1
 
 pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization
 
@@ -28,13 +29,20 @@ class db_Serv:
     def __init__(self, dbname):
 
         ##Clear the input
-        inputfile = open(PIPE_IN_NAME, 'w')
-        inputfile.write("")
-        inputfile.flush()
-        inputfile.close()
+        self.inputfile = open(PIPE_IN_NAME, 'w')
+        self.inputfile.write("")
+        self.inputfile.flush()
+        self.inputfile.close()
 
+        ##Clear the output buffers
+        for prefix in range(0, MAX_PREFIX):
+            f = open(PIPE_OUT_PREFIX + str(prefix), 'w')
+            f.write("")
+            f.flush()
+            f.close()
+        
         ##Open for reading
-        inputfile = open(PIPE_IN_NAME, 'r')
+        self.inputfile = open(PIPE_IN_NAME, 'r')
 
         ##Connect to Database
         self.dbcon = lite.connect(db_name)
@@ -47,7 +55,7 @@ class db_Serv:
     def poll(self):
         try:                 #Query found
             queries = []
-            queries.append(inputfile.read())
+            queries.append(self.inputfile.read())
             queries[0].split(';')
             for query in queries:
             #remove prefix from query

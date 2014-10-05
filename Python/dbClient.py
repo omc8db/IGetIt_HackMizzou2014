@@ -38,19 +38,19 @@ class db_Connect:
         success = 0
         while(success==0):
             try:
-                f = open(PIPE_IN_NAME, 'a')
-                f.write(str(iden) + str(command))
-                f.flush()
-                f.close()
+                outputfile = open(PIPE_IN_NAME, 'a')
+                outputfile.write(str(iden) + str(command))
+                outputfile.flush()
+                outputfile.close()
                 success = 1
             except:
-                f.close()
+                outputfile.close()
          
         
     def read(self):
         
         #unpickle
-        dePickler = pickle.Unpickler(g);
+        dePickler = pickle.Unpickler(self.inputfile);
         try:
             output = dePickler.load();
         except:
