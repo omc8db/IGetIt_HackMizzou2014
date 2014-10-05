@@ -34,7 +34,7 @@ class db_Serv:
             #remove prefix from query
             prefix = query[0]
             result = exec_input(query[1:])
-            g.open(PIPE_OUT_PREFIX + str(prefix), w)
+            g.open(PIPE_OUT_PREFIX + str(prefix), 'w')
             packer = pickle.Pickler(g, HIGHEST_PROTOCOL)
             packer.dump(result)
             g.close
