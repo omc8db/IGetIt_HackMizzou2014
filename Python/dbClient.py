@@ -75,7 +75,7 @@ class db_Connect:
         time.sleep(PICKLE_TIME_DELAY)
         dePickler = pickle.Unpickler(self.inputfile);
         success = 0
-        while(success = 0):
+        while(success == 0):
             try:
                 output = dePickler.load();
                 success = 1

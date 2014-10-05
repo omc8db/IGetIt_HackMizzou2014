@@ -5,20 +5,19 @@ server_host = 'localhost'
 server_port = 80
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    def __init__(self):
-<<<<<<< HEAD
-        print "RequestHandler constructor initialized"
-        self.db = db_Connect(1)
-=======
-        self.db = dbClient.db_Connect(1)
->>>>>>> 5945a4462556bef3c920adcf0300b0eace6e7219
-        super(RequestHandler,self).__init__();
 
-    def do_HEAD(self,s):
+    db = None
+
+    def __init__(self,request,client_address,server):
+        print("RequestHandler constructor initialized")
+        self.db = dbClient.db_Connect(1)
+        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self,request,client_address,server)
+
+    def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-    def do_GET(self,s):
+    def do_GET(s,i=db):
         print("HTTP Request Recieved")
         """Respond to a GET request."""
         s.send_response(200)
@@ -44,14 +43,14 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 if var2[0] == 'macaddr' and len(var2) == 2:
                     macaddr = var2[1]
                 studname = "STUDENT"
-                self.db.addDevice(macaddr,ipaddr,studname)
+                i.addDevice(macaddr,ipaddr,studname)
             s.wfile.write("ipaddr="+ipaddr+",macaddr="+macaddr)
                     
         if s.path[:14] == "/histogramdata":
 
                 #get list of latest ratings
-                maxtime = self.db.get_max_time()
-                studentratings = self.db.get_time_ratings(maxtime)
+                maxtime = i.get_max_time()
+                studentratings = i.get_time_ratings(maxtime)
                 ratingslist = studentratings.split("\n")[1:]
                 numstudents = len(ratingslist)
 
@@ -84,19 +83,19 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 #s.wfile.write("the index.html should be printed out now")
                 f = open("index.html","r")
                 htmltext = f.read()
-                print htmltext
+                print(htmltext)
                 s.wfile.write(htmltext)
                 s.wfile.write("<!--html-written-->")
 
 
 if __name__ == '__main__':
-    print "Web Server Started"
+    print("Web Server Started")
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class((server_host, server_port), RequestHandler)
-    print "httpd initialized"
+    print("httpd initialized")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    print "server closed"
+    print("server closed")
