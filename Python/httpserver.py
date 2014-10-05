@@ -6,6 +6,7 @@ server_port = 80
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self):
+        print "RequestHandler constructor initialized"
         self.db = db_Connect(1)
         super(RequestHandler,self).__init__();
 
@@ -14,6 +15,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_header("Content-type", "text/html")
         s.end_headers()
     def do_GET(self,s):
+        print("HTTP Request Recieved")
         """Respond to a GET request."""
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -84,10 +86,13 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
+    print "Web Server Started"
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class((server_host, server_port), RequestHandler)
+    print "httpd initialized"
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
+    print "server closed"
