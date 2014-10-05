@@ -1,14 +1,19 @@
 import BaseHTTPServer
+import db_Connect
 
 server_host = 'localhost'
 server_port = 80
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    def do_HEAD(s):
+    def __init__(self):
+        self.db = db_Connect(1)
+        super(RequestHandler,self).__init__();
+
+    def do_HEAD(self,s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-    def do_GET(s):
+    def do_GET(self,s):
         """Respond to a GET request."""
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -32,6 +37,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 var2 = variablesseparate[1].split('=')
                 if var2[0] == 'macaddr' and len(var2) == 2:
                     macaddr = var2[1]
+                studname = "STUDENT"
+                self.db.addDevice(macaddr,ipaddr,studname)
             s.wfile.write("ipaddr="+ipaddr+",macaddr="+macaddr)
                     
         if s.path[:14] == '/histogramdata':

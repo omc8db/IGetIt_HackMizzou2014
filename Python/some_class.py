@@ -1,4 +1,4 @@
-##
+"""##
 ##
 ##This file is DEPRECIATED. It is kept around for reference, and is
 ##candidate for DELETION
@@ -59,3 +59,4 @@ def dev_connect(): #receive data from device
     #extract ip and  mac
     thingy = device(IP_CONST, MAC_CONST)
     return thingy
+"""
