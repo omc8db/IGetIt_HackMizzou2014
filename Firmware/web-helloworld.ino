@@ -4,6 +4,7 @@
 #define PREFIX ""
 #define INPUT_PIN A0
 const float READ_MAX = 4096;
+const char[40] TARGET = "192.168.1.1"
 WebServer webserver(PREFIX, 80);
 char myIpString[24];
 char myMacString[17];   //MAC Address + formatting
@@ -55,9 +56,9 @@ void setup()
 
   webserver.begin();
   
-  client.connect("igetit.dtdns.net", 80);
+  client.connect(TARGET, 80);
 
-  request.hostname = "igetit.dtdns.net";
+  request.hostname = TARGET;
   request.port = 80;
   
   //Form HTTP Request
