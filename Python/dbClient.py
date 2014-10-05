@@ -7,11 +7,12 @@
 
 import pickle
 import sys
+import time
 
 PIPE_IN_NAME = 'servin.txt'
 PIPE_OUT_PREFIX = 'servout'
-pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization    
-
+PICKLE_TIME_DELAY = 0.01      #time to wait for database output to catch up
+DELIMITER = ';'
 
 ##USAGE
 ##Define a PIPE_ID for your thread
@@ -48,13 +49,39 @@ class db_Connect:
          
         
     def read(self):
+
+##  WORST SERIALIZATION PROTOCOL IN THE WORLD
+##        db_out = ""
+##        done = 0
+##        while(done == 0):
+##            print "Not done yet"
+##            try:
+##                n = inputfile.read(1)
+##                print n
+##                if(n==DELIMITER):
+##                    print "Delimeter Found"
+##                    done = 1
+##                else:
+##                    db_out = db_out + n
+##            except:
+##                time.sleep(PICKLE_TIME_DELAY)
+##        ##output = eval(db_out)
+##        output = db_out
+##        return output
+            
+        
         
         #unpickle
+        time.sleep(PICKLE_TIME_DELAY)
         dePickler = pickle.Unpickler(self.inputfile);
-        try:
-            output = dePickler.load();
-        except:
-            output = None
+        success = 0
+        while(success = 0):
+            try:
+                output = dePickler.load();
+                success = 1
+            except:
+                time.sleep(PICKLE_TIME_DELAY)
+        return output
 
     #gets events with a specific time stamp
     def get_time_events(self, time):
@@ -83,14 +110,15 @@ class db_Connect:
     #Pass variables as sendEvents([index, rating, time, student])
     def sendEvents(self, entry):                   
         query = "INSERT INTO Interest VALUES ("
-        query = query + enterid + ',' + entry[0] + ',' + entry[1] + ',' + entry[2] + ")"
+        query = query + self.enterid + ',' + entry[0] + ',' + entry[1] + ',' + entry[2] + ")"
         self.send(query)
     def addDevice(self, mac, ip, student):
         #addDevice should also result in an echo being sent to output pipe 0
-        query = "INSERT INTO devices VALUES (" + mac + "," + ip + "," + student + ");"
+        query = "INSERT INTO devices VALUES (\"" + mac + "\",\"" + ip + "\"," + student + ");"
         self.send(query)
-        query = "SELECT * FROM devices WHERE mac = " + mac + ");"
+        query = "SELECT * FROM devices WHERE mac = \"" + mac + "\";"
         self.send(query)
+        result = self.read()  ##Ignore this, we send 2 queries
         result = self.read()
         return result
         

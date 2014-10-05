@@ -12,10 +12,9 @@ import time
 PIPE_IN_NAME = 'servin.txt'
 PIPE_OUT_PREFIX = 'servout'
 DB_NAME = "data.db"
-POLL_DELAY = 2
+POLL_DELAY = .005
 MAX_PREFIX = 1
-
-pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization
+DELIMITER = ';'
 
 ##Open pipes
 def initPipes():
@@ -55,16 +54,22 @@ class db_Serv:
     def poll(self):
         queries = []
         queries.append(self.inputfile.read())
-        if(len(queries) > 1):
-            print len(queries)
-            queries[0].split(';')
-            for query in queries:
+        if(len(queries[0]) > 0):
+            print len(queries[0])
+            queries = queries[0].split(';')
+            print "Executing " + str(len(queries)) + " Queries"
+            for query in queries[:-1]: ##All but the last query. The last query is empty
             #remove prefix from query
                 prefix = query[0]
-                result = exec_input(query[1:])
-                print "Executing " + query[1:]
-                g.open(PIPE_OUT_PREFIX + str(prefix), "a")
-                packer = pickle.Pickler(g, HIGHEST_PROTOCOL)
+                query = query[1:]
+                query = query + ";"
+                print "Executing " + query
+                result = self.exec_input(query)
+                
+                g = open(PIPE_OUT_PREFIX + str(prefix), "a")
+##                g.write(str(result))
+##                g.write(DELIMITER)
+                packer = pickle.Pickler(g)
                 packer.dump(result)
                 g.close()
     def infpoll(self):
@@ -73,7 +78,10 @@ class db_Serv:
             time.sleep(POLL_DELAY)
         
     def exec_input(self, query):
-        self.cur.execute(query)
+        try:
+            self.cur.execute(query)
+        except:
+            print "ERROR. Could not execute query."
         result = self.cur.fetchall()
         return result
         

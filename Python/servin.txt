@@ -1,1 +1,1 @@
-0INSERT INTO devices VALUES (test,192.168.137.2,1234);0SELECT * FROM devices WHERE mac = test);
+0INSERT INTO devices VALUES ("Test","192.168.137.22",1234);0SELECT * FROM devices WHERE mac = "Test";0INSERT INTO devices VALUES ("Test2","192.168.137.22",1234);0SELECT * FROM devices WHERE mac = "Test2";
