@@ -6,11 +6,10 @@ server_port = 80
 
 class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    db = None
+    db = dbClient.db_Connect(1)
 
     def __init__(self,request,client_address,server):
         print("RequestHandler constructor initialized")
-        self.db = dbClient.db_Connect(1)
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self,request,client_address,server)
 
     def do_HEAD(s):
@@ -18,7 +17,8 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.send_header("Content-type", "text/html")
         s.end_headers()
     def do_GET(s,i=db):
-        print("HTTP Request Recieved")
+        #print("HTTP Request Recieved")
+        print("path="+s.path)
         """Respond to a GET request."""
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -38,21 +38,22 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             if len(variablesseparate) > 1:
                 var1 = variablesseparate[0].split('=')
                 if var1[0] == 'ipaddr' and len(var1) == 2:
-                    ipaddr = var1[1] 
+                    ipaddr = var1[1]
                 var2 = variablesseparate[1].split('=')
                 if var2[0] == 'macaddr' and len(var2) == 2:
                     macaddr = var2[1]
                 studname = "STUDENT"
                 i.addDevice(macaddr,ipaddr,studname)
             s.wfile.write("ipaddr="+ipaddr+",macaddr="+macaddr)
-                    
+
         if s.path[:14] == "/histogramdata":
 
                 #get list of latest ratings
                 maxtime = i.get_max_time()
-                studentratings = i.get_time_ratings(maxtime)
-                ratingslist = studentratings.split("\n")[1:]
-                numstudents = len(ratingslist)
+                print("max time = "+maxtime)
+                """
+                studentratings = i.get_time_ratings(maxtime[1][0])
+                numstudents = len(studentratings)
 
                 #set number of bars on graph
                 resolution = 10
@@ -62,7 +63,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 #tally up frequency
                 increment = numstudents/resolution
 
-                for currentrating in ratingslist:
+                for currentrating in studentratings:
                     lownum = 0
                     i = 0;
                     while i < resolution:
@@ -78,7 +79,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 s.wfile.write("\"frequencies\":"+frequencylist+",")
                 s.wfile.write("\"numStudents\":"+numstudents+" }")
 
-            
+            """
         if s.path == '/' or s.path == '':
                 #s.wfile.write("the index.html should be printed out now")
                 f = open("index.html","r")

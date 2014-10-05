@@ -91,7 +91,7 @@ class db_Connect:
             return result
 
     def get_max_time(self):
-        query = "SELECT MAX(time) FROM Interest;"
+        query = "SELECT MAX(time) FROM (SELECT time FROM Interest);"
         self.send(query)
         result = self.read()
         return result
