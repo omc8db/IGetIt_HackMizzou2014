@@ -19,26 +19,36 @@ pickle.HIGHEST_PROTOCOL = 2             #Binary data serialization
 ##This will create a pipe with an ID associated with your thread
 
 class db_Connect:
-    f = None              #File
+    f = None              #File for output
     iden = None           #Integer Identifier
+    inputfile = None              #File for input
     def __init__(self, iden):
         #define the named pipe
         self.iden = iden
 
+        #clear the 
+        self.inputfile = open(PIPE_OUT_PREFIX + str(self.iden), 'r')
+
+    def __del__(self):
+        self.inputfile.close()
+
     #Prefixes the command with an identifier for the output pipe
     def send(self, command):
         #open pipe
-        try:
-            f = open(PIPE_IN_NAME, 'w')
-            f.write(str(iden) + str(command))
-            f.flush()
-            f.close()
-        except:
-            ()
+        success = 0
+        while(success==0):
+            try:
+                f = open(PIPE_IN_NAME, 'a')
+                f.write(str(iden) + str(command))
+                f.flush()
+                f.close()
+                success = 1
+            except:
+                f.close()
          
         
     def read(self):
-        g = open(PIPE_OUT_PREFIX + str(self.iden), 'r')
+        
         #unpickle
         dePickler = pickle.Unpickler(g);
         try:
