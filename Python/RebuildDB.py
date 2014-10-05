@@ -11,6 +11,8 @@ import sys
 con = lite.connect(DB_FILENAME)
 
 with con:
-    cur = con.cursor()    
+    cur = con.cursor()
+    cur.execute("DROP TABLE Interest;")
+    cur.execute("DROP TABLE devices;")
     cur.execute("CREATE TABLE Interest(Id INTEGER PRIMARY KEY, rating REAL, time INT, student INT);")
-    cur.execute("CREATE TABLE devices(mac TEXT PRIMARY KEY, ip TEXT, student INY);")
+    cur.execute("CREATE TABLE devices(mac TEXT PRIMARY KEY, ip TEXT, student INT);")
