@@ -23,6 +23,7 @@ class devicePoll:
         all_events = self.conn.get_all_events()
         if(all_events):
             self.primekey = all_events[len(all_events)][0]   #fetches the last event
+        self.get_device_db()
     def infpoll(self):
         while (1):
             for i in range(0,DEV_LIST_REFRESH_INTERVAL):
