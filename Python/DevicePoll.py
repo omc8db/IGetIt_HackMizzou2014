@@ -40,6 +40,7 @@ class devicePoll:
         #make http request to device
         f = url.urlopen(device.ip)
         rating = f.read()
+        print "Device " + str(device.mac) + " read w/ value " + rating
         return rating
 
     ##Updates current device list from DB
