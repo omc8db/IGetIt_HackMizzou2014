@@ -26,19 +26,21 @@
 		width: 10%;
 		height: 100%
 		//background-color: black;
-		border: 5px solid;
+		//border: 1px solid;
 	}
 	.graphbar
 	{
 		width: 100%;
 		background-color: blue;
-		vertical-align: 500px;
+		margin-top: 280px;
 	}
 	</style>
 	<script type="text/javascript">
 	//alert("first script tag runs");
 	
 	//A dummy set of frequencies for each range ex: 0-1, 1-2, etc...
+	
+	var currentlyDrawing = false;
 	
 	var frequencies = [0,0,0,0,3,5,10,19,9,2];
 	
@@ -51,7 +53,7 @@
 	//Uses AJAX to load values from the server
 	function loadData()
 	{
-	alert("loadData");
+	//alert("loadData");
 	var xmlhttp;
 	if (window.XMLHttpRequest)
 	  {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -63,38 +65,52 @@
 	  }
 	xmlhttp.onreadystatechange=function()
 	  {
-	  alert("status="+	xmlhttp.status);
 	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-		alert("request succeeded");
-		alert(xmlhttp.responseText);
+		//alert("status="+	xmlhttp.status);
+		//alert("request succeeded");
+		//alert(xmlhttp.responseText);
 		
 		var responseData = JSON.parse(xmlhttp.responseText);
+		
 		
 		//If the response data contains the desired variables, store their values to the local equivalents
 		if (typeof responseData.resolution != "undefined") {
 			resolution = responseData.resolution;
-			alert("First if statement");
+			//alert("resolution="+resolution);
 		}
 		
 		if (typeof responseData.frequencies != "undefined") {
-			resolution = responseData.frequencies;
+			frequencies = responseData.frequencies;
 		}
 		
 		if (typeof responseData.numStudents != "undefined") {
-			resolution = responseData.numStudents;
+			numStudents = responseData.numStudents;
 		}
 		
+		if (!currentlyDrawing) {
+		//alert("drawing new graph");
+		//alert("drawGraph(res="+resolution+",frequencies="+frequencies+",numStudents="+numStudents);
+		drawGraph(resolution, frequencies, numStudents);
+		}
 		}
 	  }
 	xmlhttp.open("GET","histogramdata",true);
 	xmlhttp.send();
 	
-	alert("loadData finished");
+	window.setTimeout(function() {
+		//alert("iteration");
+		loadData();
+		},
+		5000);
+	//alert("loadData finished");
 	}
 	
 	function drawGraph(resolution, frequencies, numStudents)
 	{
+		//alert("drawGraph(res="+resolution+",frequencies="+frequencies+",numStudents="+numStudents);
+		if (currentlyDrawing == true) return;
+		currentlyDrawing = true;
 		
 		//Calculate the width percentage needed to equally divide the table into bars
 		var widthPercent = 100/resolution;
@@ -116,6 +132,9 @@
 			var currentBar = document.createElement("div");
 			currentBar.setAttribute("class", "graphbar");
 			currentBar.style.height = currentHeightPercent+"%";
+			//var totalHeight = parseInt(document.getElementById("graphbox").style.height.substring( ));
+			//alert(totalHeight);
+			//currentBar.style.margin-top = totalHeight-totalHeight*currentHeightPercent/100+"px";
 			
 			//append the current bar to the current bin
 			currentBin.appendChild(currentBar);
@@ -127,39 +146,38 @@
 		}
 		var graphBox = document.getElementById("graphbox")
 		graphBox.replaceChild(rowOfBars, graphBox.childNodes[1]);
+		currentlyDrawing = false;
 	}
 	
+	loadData();
+	
 	</script>
-</head>
+</head> 
 <body>
 	<div id="graph">
 		<h2 class="graphtitle">Students for Each Understanding Index</h2>
 			<table id="graphbox">
 			<tr>
-				<td id="1" class="graphbin">
-				<td id="2" class="graphbin">
-				<td id="3" class="graphbin">
-				<td id="4" class="graphbin">
-				<td id="5" class="graphbin">
-				<td id="6" class="graphbin">
-				<td id="7" class="graphbin">
-				<td id="8" class="graphbin">
-				<td id="9" class="graphbin">
-				<td id="10" class="graphbin">
+				<td align="center">
+				<h1>No data is currently available.</h1>
+				</td>
 			</tr>
 			</table>
 	</div>
 	<script type="text/javascript">
 			//alert('second script tag runs');
 			
-			
+			/*
 			alert(frequencies);
+			
+			drawGraph(resolution, frequencies, numStudents);
 		
 			loadData();
 		
 			alert(frequencies);
 	
 			drawGraph(resolution, frequencies, numStudents);
+			*/
 	
 	</script>
 </body>
