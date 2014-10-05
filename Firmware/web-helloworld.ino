@@ -1,60 +1,73 @@
-// This #include statement was automatically added by the Spark IDE.
+#include "HttpClient/HttpClient.h"
 #include "WebServer.h"
-
-/* Web_HelloWorld.pde - very simple Webduino example */
-
 #include "WebServer.h"
-
-/* This creates an instance of the webserver.  By specifying a prefix
- * of "", all pages will be at the root of the server. */
 #define PREFIX ""
 #define INPUT_PIN A0
-const float READ_MAX = 4096; //Float to handle casting correctly
+const float READ_MAX = 4096;
 WebServer webserver(PREFIX, 80);
+char myIpString[24];
+char myMacString[17];   //MAC Address + formatting
+char requestbuffer[100];
+byte MAC[6];            //Bytes of MAC Address
+HttpClient http;
+http_request_t request;
+http_response_t response;
+http_header_t headers[] = {
+    { "Accept" , "*/*"},
+    { NULL, NULL }
+};
+
+TCPClient client;
 
 template<class T>
 inline Print &operator <<(Print &obj, T arg)
 { obj.print(arg); return obj; }
-
 int Interest_input = 0;
-/* commands are functions that get called by the webserver framework
- * they can read any posted data from client, and they output to the
- * server to send data back to the web browser. */
+
 void helloCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
 {
-  /* this line sends the standard "we're all OK" headers back to the
-     browser */
   server.httpSuccess();
 
-  /* if we're handling a GET or POST, we can output our data here.
-     For a HEAD request, we just stop after outputting headers. */
   if (type != WebServer::HEAD)
   {
     float output = Interest_input / READ_MAX;
     output *= 10;
-    /* this defines some HTML text in read-only memory aka PROGMEM.
-     * This is needed to avoid having the string copied to our limited
-     * amount of RAM. */
 
     server << output;
-
-    /* this is a special form of print that outputs from PROGMEM */
-    //server.printP(helloMsg);
   }
 }
 
 void setup()
 {
-  /* setup our default command that will be run when the user accesses
-   * the root page on the server */
   webserver.setDefaultCommand(&helloCmd);
+  
+  // Report IP address as spark variable, string
+  IPAddress myIp = WiFi.localIP();
+  sprintf(myIpString, "%d.%d.%d.%d", myIp[0], myIp[1], myIp[2], myIp[3]);
+  Spark.variable("ipAddress", myIpString, STRING);
+  
+  // Report my MAC address as spark variable, string
+  WiFi.macAddress(MAC);             //Store in bytes, least to most significant
+  sprintf(myMacString, "%x:%x:%x:%x:%x:%x", MAC[5],MAC[4],MAC[3],MAC[2],MAC[1],MAC[0]);
+  Spark.variable("macAddress", myMacString, STRING);
 
-  /* run the same command if you try to load /index.html, a common
-   * default page name */
   webserver.addCommand("index.html", &helloCmd);
 
-  /* start the webserver */
   webserver.begin();
+  
+  client.connect("igetit.dtdns.net", 80);
+
+  request.hostname = "igetit.dtdns.net";
+  request.port = 80;
+  
+  //Form HTTP Request
+  strcpy (requestbuffer,"/registeraddress?ipaddr=");
+  strcat (requestbuffer,myIpString);
+  strcat (requestbuffer,"&macaddr=");
+  strcat (requestbuffer,myMacString);
+  request.path = requestbuffer;
+
+  http.get(request, response, headers);
   
   pinMode(INPUT_PIN, INPUT);
 }
@@ -65,6 +78,17 @@ void loop()
   int len = 64;
 
   Interest_input = analogRead(INPUT_PIN);
-  /* process incoming connections one at a time forever */
+
   webserver.processConnection(buff, &len);
+  
+  if (client.available())
+  {
+    client.read();
+  }
+
+  if (!client.connected())
+  {
+    client.stop();
+    for(;;);
+  }
 }
