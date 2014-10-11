@@ -35,6 +35,11 @@
 		margin-top: 280px;
 		color: white;
 	}
+	#labels
+	{
+	margin-left: auto;
+	margin-right: auto;
+	}
 	</style>
 	<script type="text/javascript">
 	//alert("first script tag runs");
@@ -144,6 +149,7 @@
 
 			//currentBar.style.paddingTop = leftoverHeight+"px";
 			
+			//Add a number to each bar:
 			currentBar.appendChild(document.createTextNode(frequencies[i]));
 			
 			//alert(leftoverHeight);
@@ -156,16 +162,47 @@
 			rowOfBars.appendChild(currentBin);
 			//alert(rowOfBars.childNodes[0]);
 		}
+		//Append the graph that was just generated:
 		var graphBox = document.getElementById("graphbox")
-		graphBox.replaceChild(rowOfBars, graphBox.childNodes[1]);
+		graphBox.replaceChild(rowOfBars, graphBox.childNodes[1]);		
+				
 		currentlyDrawing = false;
 	}
+	
+	function drawLabels()
+	{
+		var rowOfLabels = document.createElement("tr");
+		var graphWidth = 640;
+		var labelWidth = graphWidth/resolution;
+		
+		var increment = 10/resolution;
+		var startOfRange = 0;
+		
+		//Add the label for each bar at the bottom:
+		for (var i = 1; i <= resolution; i++)
+		{
+			var currentLabel = document.createElement("td");
+			currentLabel.appendChild(document.createTextNode(startOfRange*increment+" to "+i*increment));
+			currentLabel.style.width = labelWidth+"px";
+			if (i < resolution) currentLabel.style.borderRight = "1px solid";
+			rowOfLabels.appendChild(currentLabel);
+			startOfRange = i;
+		}
+
+		//alert(document.getElementById("labels"));
+		
+		//Append row of labels that was just generated:
+		document.getElementById("labels").appendChild(rowOfLabels);
+		
+	}
+	
+	//window.setTimeout(drawLabels(),1000);
 	
 	loadData();
 	
 	</script>
 </head> 
-<body>
+<body onload="drawLabels();">
 	<div id="graph">
 		<h2 class="graphtitle">Students for Each Understanding Index</h2>
 			<table id="graphbox">
