@@ -50,7 +50,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
                 #get list of latest ratings
                 maxtime = i.get_max_time()
-                print("max time = "+maxtime)
+                #print("max time = "+maxtime)
                 """
                 studentratings = i.get_time_ratings(maxtime[1][0])
                 numstudents = len(studentratings)
@@ -79,7 +79,12 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 s.wfile.write("\"frequencies\":"+frequencylist+",")
                 s.wfile.write("\"numStudents\":"+numstudents+" }")
 
-            """
+                """
+
+                s.wfile.write("{ \"resolution\":10,")
+                s.wfile.write("\"frequencies\":[0,0,0,3,5,5,10,15,20,10],")
+                s.wfile.write("\"numStudents\":68 }")
+
         if s.path == '/' or s.path == '':
                 #s.wfile.write("the index.html should be printed out now")
                 f = open("index.html","r")

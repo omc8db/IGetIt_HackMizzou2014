@@ -17,8 +17,8 @@
 	}
 	#graphbox
 	{
-		width: 640px;
 		height: 480px;
+		width: 640px;
 		border: 1px solid;
 	}
 	.graphbin
@@ -33,6 +33,7 @@
 		width: 100%;
 		background-color: blue;
 		margin-top: 280px;
+		color: white;
 	}
 	</style>
 	<script type="text/javascript">
@@ -108,6 +109,10 @@
 	
 	function drawGraph(resolution, frequencies, numStudents)
 	{
+		//Find total height dynamically later:
+		//alert(document.getElementById("graphbox").style.height);
+		var totalHeight = 480;
+			
 		//alert("drawGraph(res="+resolution+",frequencies="+frequencies+",numStudents="+numStudents);
 		if (currentlyDrawing == true) return;
 		currentlyDrawing = true;
@@ -126,15 +131,22 @@
 			currentBin.setAttribute("id",i);
 			
 			//calculate the height for the current bar (should be done server-side eventually)
-			var currentHeightPercent = (frequencies[i]/numStudents)*100;
+			var currentHeightPercent = Math.round(frequencies[i]/numStudents*100);
 
 			//set up a bar element
 			var currentBar = document.createElement("div");
 			currentBar.setAttribute("class", "graphbar");
 			currentBar.style.height = currentHeightPercent+"%";
-			//var totalHeight = parseInt(document.getElementById("graphbox").style.height.substring( ));
+			
 			//alert(totalHeight);
-			//currentBar.style.margin-top = totalHeight-totalHeight*currentHeightPercent/100+"px";
+			
+			var leftoverHeight = Math.round(totalHeight*currentHeightPercent/100);
+
+			//currentBar.style.paddingTop = leftoverHeight+"px";
+			
+			currentBar.appendChild(document.createTextNode(frequencies[i]));
+			
+			//alert(leftoverHeight);
 			
 			//append the current bar to the current bin
 			currentBin.appendChild(currentBar);
@@ -163,6 +175,8 @@
 				</td>
 			</tr>
 			</table>
+		<table id="labels">
+		</table>
 	</div>
 	<script type="text/javascript">
 			//alert('second script tag runs');
