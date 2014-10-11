@@ -37,8 +37,7 @@
 	}
 	#labels
 	{
-	margin-left: auto;
-	margin-right: auto;
+		margin-left: 10px;
 	}
 	</style>
 	<script type="text/javascript">
@@ -47,6 +46,8 @@
 	//A dummy set of frequencies for each range ex: 0-1, 1-2, etc...
 	
 	var currentlyDrawing = false;
+	
+	var floating = false;
 	
 	var frequencies = [0,0,0,0,3,5,10,19,9,2];
 	
@@ -73,32 +74,32 @@
 	  {
 	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-		//alert("status="+	xmlhttp.status);
-		//alert("request succeeded");
-		//alert(xmlhttp.responseText);
-		
-		var responseData = JSON.parse(xmlhttp.responseText);
-		
-		
-		//If the response data contains the desired variables, store their values to the local equivalents
-		if (typeof responseData.resolution != "undefined") {
-			resolution = responseData.resolution;
-			//alert("resolution="+resolution);
-		}
-		
-		if (typeof responseData.frequencies != "undefined") {
-			frequencies = responseData.frequencies;
-		}
-		
-		if (typeof responseData.numStudents != "undefined") {
-			numStudents = responseData.numStudents;
-		}
-		
-		if (!currentlyDrawing) {
-		//alert("drawing new graph");
-		//alert("drawGraph(res="+resolution+",frequencies="+frequencies+",numStudents="+numStudents);
-		drawGraph(resolution, frequencies, numStudents);
-		}
+			//alert("status="+	xmlhttp.status);
+			//alert("request succeeded");
+			//alert(xmlhttp.responseText);
+			
+			var responseData = JSON.parse(xmlhttp.responseText);
+			
+			
+			//If the response data contains the desired variables, store their values to the local equivalents
+			if (typeof responseData.resolution != "undefined") {
+				resolution = responseData.resolution;
+				//alert("resolution="+resolution);
+			}
+			
+			if (typeof responseData.frequencies != "undefined") {
+				frequencies = responseData.frequencies;
+			}
+			
+			if (typeof responseData.numStudents != "undefined") {
+				numStudents = responseData.numStudents;
+			}
+			
+			if (!currentlyDrawing) {
+			//alert("drawing new graph");
+			//alert("drawGraph(res="+resolution+",frequencies="+frequencies+",numStudents="+numStudents);
+			drawGraph(resolution, frequencies, numStudents);
+			}
 		}
 	  }
 	xmlhttp.open("GET","histogramdata",true);
@@ -145,14 +146,19 @@
 			
 			//alert(totalHeight);
 			
-			var leftoverHeight = Math.round(totalHeight*currentHeightPercent/100);
-
-			//currentBar.style.paddingTop = leftoverHeight+"px";
+			//Push the current bar down by however many pixels get it to the bottom:
+			if (!floating)
+			{
+				var leftoverHeight = totalHeight - Math.round(totalHeight*currentHeightPercent/100);
+				currentBar.style.marginTop = leftoverHeight+"px";
+				//alert(leftoverHeight);
+			}
 			
 			//Add a number to each bar:
-			currentBar.appendChild(document.createTextNode(frequencies[i]));
-			
-			//alert(leftoverHeight);
+			if (frequencies[i] != 0)
+			{
+				currentBar.appendChild(document.createTextNode(frequencies[i]));
+			}
 			
 			//append the current bar to the current bin
 			currentBin.appendChild(currentBar);
@@ -208,7 +214,7 @@
 			<table id="graphbox">
 			<tr>
 				<td align="center">
-				<h1>No data is currently available.</h1>
+				<h1>No data currently available.</h1>
 				</td>
 			</tr>
 			</table>
