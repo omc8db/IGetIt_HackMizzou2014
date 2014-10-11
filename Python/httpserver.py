@@ -25,59 +25,59 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.end_headers()
 
         #Declaring variables:
-        ipaddr = ""
-        macaddr = ""
+        ipAddr = ""
+        macAddr = ""
 
         # If someone went to "http://something.somewhere.net/foo/bar/",
         # then s.path equals "/foo/bar/".
         if s.path[:16] == '/registeraddress':
-            #parse ip address and mac address in the form "hostname/?ipaddr=1.2.3.4&macaddr=00:00:00:00:00:00":
-            allofpath = s.path.split('?')
-            variablestogether = allofpath[1]
-            variablesseparate = variablestogether.split('&')
-            if len(variablesseparate) > 1:
-                var1 = variablesseparate[0].split('=')
+            #parse ip address and mac address in the form "hostname/?ipaddr=1.2.3.4&macAddr=00:00:00:00:00:00":
+            pathSplit = s.path.split('?')
+            pathVariables = pathSplit[1]
+            variablesSeparate = pathVariables.split('&')
+            if len(variablesSeparate) > 1:
+                var1 = variablesSeparate[0].split('=')
                 if var1[0] == 'ipaddr' and len(var1) == 2:
-                    ipaddr = var1[1]
-                var2 = variablesseparate[1].split('=')
-                if var2[0] == 'macaddr' and len(var2) == 2:
-                    macaddr = var2[1]
-                studname = "STUDENT"
-                i.addDevice(macaddr,ipaddr,studname)
-            s.wfile.write("ipaddr="+ipaddr+",macaddr="+macaddr)
+                    ipAddr = var1[1]
+                var2 = variablesSeparate[1].split('=')
+                if var2[0] == 'macAddr' and len(var2) == 2:
+                    macAddr = var2[1]
+                studName = "STUDENT"
+                i.addDevice(macAddr,ipAddr,studName)
+            s.wfile.write("ipaddr="+ipAddr+",macaddr="+macAddr)
 
         if s.path[:14] == "/histogramdata":
 
                 #get list of latest ratings
-                maxtime = i.get_max_time()
-                #print("max time = "+maxtime)
+                maxTime = i.get_max_time()
+                #print("max time = "+maxTime)
                 """
-                studentratings = i.get_time_ratings(maxtime[1][0])
-                numstudents = len(studentratings)
+                studentRatings = i.get_time_ratings(maxTime[1][0])
+                numStudents = len(studentRatings)
 
                 #set number of bars on graph
                 resolution = 10
 
-                frequencylist = []
+                frequencyList = []
 
                 #tally up frequency
-                increment = numstudents/resolution
+                increment = numStudents/resolution
 
-                for currentrating in studentratings:
-                    lownum = 0
+                for currentRating in studentRatings:
+                    lowNum = 0
                     i = 0;
                     while i < resolution:
-                        highnum = lownum + increment
-                        if currentrating <= highnum and currentrating > lownum:
-                            frequencylist[i] += 1
+                        highNum = lowNum + increment
+                        if currentRating <= highNum and currentRating > lowNum:
+                            frequencyList[i] += 1
                         i += 1
-                        lownum = highnum
+                        lowNum = highNum
 
 
 
                 s.wfile.write("{ \"resolution\":"+resolution+",")
-                s.wfile.write("\"frequencies\":"+frequencylist+",")
-                s.wfile.write("\"numStudents\":"+numstudents+" }")
+                s.wfile.write("\"frequencies\":"+frequencyList+",")
+                s.wfile.write("\"numStudents\":"+numStudents+" }")
 
                 """
 
@@ -88,9 +88,9 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if s.path == '/' or s.path == '':
                 #s.wfile.write("the index.html should be printed out now")
                 f = open("index.html","r")
-                htmltext = f.read()
-                print(htmltext)
-                s.wfile.write(htmltext)
+                HTML_Text = f.read()
+                print(HTML_Text)
+                s.wfile.write(HTML_Text)
                 s.wfile.write("<!--html-written-->")
 
 
